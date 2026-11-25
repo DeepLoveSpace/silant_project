@@ -1,0 +1,113 @@
+{% extends 'service_book/base.html' %}
+
+{% block content %}
+
+<div class="detail-page">
+    <h1>Детальная информация о машине: {{ machine.serial_number }}</h1>
+
+    <div class="detail-actions">
+        <a href="{% url 'dashboard' %}" class="back-link">&larr; Назад к списку</a>
+
+        {% if is_manager %}
+            <a href="{% url 'machine_edit' machine.pk %}" class="btn">Редактировать</a>
+        {% endif %}
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <th style="width: 30%;">Зав. № машины</th>
+                <td>{{ machine.serial_number }}</td>
+            </tr>
+            <tr>
+                <th>Модель техники</th>
+                <td>
+                    {{ machine.technique_model.name }}
+                    {% if machine.technique_model.description %}
+                        <br><small style="color: gray;">Описание: {{ machine.technique_model.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Модель двигателя</th>
+                <td>
+                    {{ machine.engine_model.name }}
+                    {% if machine.engine_model.description %}
+                        <br><small style="color: gray;">Описание: {{ machine.engine_model.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Зав. № двигателя</th>
+                <td>{{ machine.engine_serial_number }}</td>
+            </tr>
+            <tr>
+                <th>Модель трансмиссии</th>
+                <td>
+                    {{ machine.transmission_model.name }}
+                    {% if machine.transmission_model.description %}
+                        <br><small style="color: gray;">Описание: {{ machine.transmission_model.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Зав. № трансмиссии</th>
+                <td>{{ machine.transmission_serial_number }}</td>
+            </tr>
+            <tr>
+                <th>Модель ведущего моста</th>
+                <td>
+                    {{ machine.drive_axle_model.name }}
+                    {% if machine.drive_axle_model.description %}
+                        <br><small style="color: gray;">Описание: {{ machine.drive_axle_model.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Зав. № ведущего моста</th>
+                <td>{{ machine.drive_axle_serial_number }}</td>
+            </tr>
+            <tr>
+                <th>Модель управляемого моста</th>
+                <td>
+                    {{ machine.steer_axle_model.name }}
+                    {% if machine.steer_axle_model.description %}
+                        <br><small style="color: gray;">Описание: {{ machine.steer_axle_model.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Зав. № управляемого моста</th>
+                <td>{{ machine.steer_axle_serial_number }}</td>
+            </tr>
+            <tr>
+                <th>Договор поставки №, дата</th>
+                <td>{{ machine.supply_contract }}</td>
+            </tr>
+            <tr>
+                <th>Дата отгрузки с завода</th>
+                <td>{{ machine.shipment_date|date:"d.m.Y" }}</td>
+            </tr>
+            <tr>
+                <th>Грузополучатель (конечный потребитель)</th>
+                <td>{{ machine.consignee }}</td>
+            </tr>
+            <tr>
+                <th>Адрес поставки (эксплуатации)</th>
+                <td>{{ machine.delivery_address }}</td>
+            </tr>
+            <tr>
+                <th>Комплектация (доп. опции)</th>
+                <td>{{ machine.equipment }}</td>
+            </tr>
+            <tr>
+                <th>Клиент</th>
+                <td>{{ machine.client.username }}</td>
+            </tr>
+            <tr>
+                <th>Сервисная компания</th>
+                <td>{{ machine.service_company.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

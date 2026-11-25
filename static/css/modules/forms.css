@@ -1,0 +1,127 @@
+.form-page {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.form-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    border-top: 5px solid var(--silant-blue);
+}
+
+.form-title {
+    color: var(--silant-blue);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--silant-blue);
+    text-decoration: none;
+    margin-bottom: 25px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--silant-red);
+}
+
+.styled-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.styled-form .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.styled-form label {
+    font-weight: bold;
+    color: var(--silant-blue);
+    font-size: 0.95rem;
+}
+
+.required-star {
+    color: var(--silant-red);
+    margin-left: 3px;
+}
+
+.styled-form input[type="text"],
+.styled-form input[type="number"],
+.styled-form input[type="date"],
+.styled-form input[type="password"],
+.styled-form select,
+.styled-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #fafafa;
+}
+
+.styled-form input:focus,
+.styled-form select:focus,
+.styled-form textarea:focus {
+    outline: none;
+    border-color: var(--silant-blue);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(22, 62, 108, 0.1);
+}
+
+.styled-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.styled-form select {
+    cursor: pointer;
+}
+
+.form-help {
+    color: #777;
+    font-size: 0.85rem;
+}
+
+.form-field-error {
+    color: var(--silant-red);
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.form-error-box {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.form-actions .btn,
+.form-actions .btn-outline-dark {
+    width: auto;
+    padding: 10px 25px;
+    min-width: 150px;
+    text-align: center;
+}

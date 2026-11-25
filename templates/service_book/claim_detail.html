@@ -1,0 +1,72 @@
+{% extends 'service_book/base.html' %}
+{% block content %}
+<div class="detail-page">
+    <h1>Детальная информация о рекламации</h1>
+
+    <div class="detail-actions">
+        <a href="{% url 'dashboard' %}" class="back-link">&larr; Назад к списку</a>
+
+        {% if is_manager or is_service %}
+            <a href="{% url 'claim_edit' claim.pk %}" class="btn">Редактировать</a>
+        {% endif %}
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <th style="width: 30%;">Дата отказа</th>
+                <td>{{ claim.failure_date|date:"d.m.Y" }}</td>
+            </tr>
+            <tr>
+                <th>Наработка, м/час</th>
+                <td>{{ claim.operating_hours }}</td>
+            </tr>
+            <tr>
+                <th>Узел отказа</th>
+                <td>
+                    {{ claim.failure_node.name }}
+                    {% if claim.failure_node.description %}
+                        <br><small style="color: gray;">Описание: {{ claim.failure_node.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Описание отказа</th>
+                <td>{{ claim.failure_description }}</td>
+            </tr>
+            <tr>
+                <th>Способ восстановления</th>
+                <td>
+                    {{ claim.recovery_method.name }}
+                    {% if claim.recovery_method.description %}
+                        <br><small style="color: gray;">Описание: {{ claim.recovery_method.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Используемые запасные части</th>
+                <td>{{ claim.spare_parts }}</td>
+            </tr>
+            <tr>
+                <th>Дата восстановления</th>
+                <td>{{ claim.recovery_date|date:"d.m.Y" }}</td>
+            </tr>
+            <tr>
+                <th>Время простоя техники (дней)</th>
+                <td>{{ claim.downtime|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>Машина</th>
+                <td>
+                    <a href="{% url 'machine_detail' claim.machine.pk %}">
+                        {{ claim.machine.serial_number }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Сервисная компания</th>
+                <td>{{ claim.service_company.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

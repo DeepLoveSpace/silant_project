@@ -1,0 +1,288 @@
+{% extends 'service_book/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'includes/breadcrumbs.html' %}
+{% include 'includes/logo_animation.html' %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2>Личный кабинет: {{ user.username }}</h2>
+        <p>Роль: 
+            {% if is_manager %}Менеджер{% elif is_service %}Сервисная организация{% elif is_client %}Клиент{% else %}Гость{% endif %}
+        </p>
+    </div>
+
+    <div class="tabs">
+        <a href="?tab=machines" class="tab-btn {% if current_tab == 'machines' %}active{% endif %}">Общая информация (Машины)</a>
+        <a href="?tab=to" class="tab-btn {% if current_tab == 'to' %}active{% endif %}">ТО</a>
+        <a href="?tab=claims" class="tab-btn {% if current_tab == 'claims' %}active{% endif %}">Рекламации</a>
+    </div>
+
+    <div class="action-bar">
+        {% if current_tab == 'machines' %}
+            {% if is_manager %}
+                <a href="{% url 'machine_create' %}" class="btn btn-success">+ Добавить машину</a>
+            {% endif %}
+        {% elif current_tab == 'to' %}
+            {# Кнопку видят все авторизованные: менеджер, сервис, клиент #}
+            <a href="{% url 'maintenance_create' %}" class="btn btn-success">+ Добавить ТО</a>
+        {% elif current_tab == 'claims' %}
+            {% if is_manager or is_service %}
+                <a href="{% url 'claim_create' %}" class="btn btn-success">+ Добавить рекламацию</a>
+            {% endif %}
+        {% endif %}
+        
+        <div class="sort-controls">
+            <span>Сортировка:</span>
+            <a href="?tab={{ current_tab }}&sort=asc" class="btn btn-sm {% if current_sort == 'asc' %}active{% endif %}">По возрастанию</a>
+            <a href="?tab={{ current_tab }}&sort=desc" class="btn btn-sm {% if current_sort == 'desc' %}active{% endif %}">По убыванию</a>
+        </div>
+    </div>
+
+    {% if current_tab == 'machines' %}
+        <div class="filters-panel">
+            <form method="GET" action="">
+                <input type="hidden" name="tab" value="machines">
+                {% if current_filters.sort %}<input type="hidden" name="sort" value="{{ current_filters.sort }}">{% endif %}
+                
+                <div class="filter-group">
+                    <label>Модель техники:</label>
+                    <select name="tech_model">
+                        <option value="">Все</option>
+                        {% for model in tech_models %}
+                            <option value="{{ model.id }}" {% if current_filters.tech_model == model.id|stringformat:"s" %}selected{% endif %}>{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Модель двигателя:</label>
+                    <select name="engine_model">
+                        <option value="">Все</option>
+                        {% for model in engine_models %}
+                            <option value="{{ model.id }}" {% if current_filters.engine_model == model.id|stringformat:"s" %}selected{% endif %}>{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Модель трансмиссии:</label>
+                    <select name="trans_model">
+                        <option value="">Все</option>
+                        {% for model in trans_models %}
+                            <option value="{{ model.id }}" {% if current_filters.trans_model == model.id|stringformat:"s" %}selected{% endif %}>{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Модель ведущего моста:</label>
+                    <select name="drive_axle">
+                        <option value="">Все</option>
+                        {% for model in drive_axles %}
+                            <option value="{{ model.id }}" {% if current_filters.drive_axle == model.id|stringformat:"s" %}selected{% endif %}>{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Модель управляемого моста:</label>
+                    <select name="steer_axle">
+                        <option value="">Все</option>
+                        {% for model in steer_axles %}
+                            <option value="{{ model.id }}" {% if current_filters.steer_axle == model.id|stringformat:"s" %}selected{% endif %}>{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" class="btn">Применить</button>
+                    <a href="?tab=machines" class="btn btn-outline">Сбросить</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зав. № машины</th>
+                        <th>Модель техники</th>
+                        <th>Модель двигателя</th>
+                        <th>Зав. № двигателя</th>
+                        <th>Модель трансмиссии</th>
+                        <th>Зав. № трансмиссии</th>
+                        <th>Модель ведущего моста</th>
+                        <th>Зав. № ведущего моста</th>
+                        <th>Модель управляемого моста</th>
+                        <th>Зав. № управляемого моста</th>
+                        <th>Дата отгрузки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for machine in machines %}
+                    <tr onclick="window.location='{% url 'machine_detail' machine.pk %}';" style="cursor: pointer;">
+                        <td>{{ machine.serial_number }}</td>
+                        <td>{{ machine.technique_model.name }}</td>
+                        <td>{{ machine.engine_model.name }}</td>
+                        <td>{{ machine.engine_serial_number }}</td>
+                        <td>{{ machine.transmission_model.name }}</td>
+                        <td>{{ machine.transmission_serial_number }}</td>
+                        <td>{{ machine.drive_axle_model.name }}</td>
+                        <td>{{ machine.drive_axle_serial_number }}</td>
+                        <td>{{ machine.steer_axle_model.name }}</td>
+                        <td>{{ machine.steer_axle_serial_number }}</td>
+                        <td>{{ machine.shipment_date|date:"d.m.Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="11" class="text-center">Машины не найдены.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if current_tab == 'to' %}
+        <div class="filters-panel">
+            <form method="GET" action="">
+                <input type="hidden" name="tab" value="to">
+                {% if current_filters.sort %}<input type="hidden" name="sort" value="{{ current_filters.sort }}">{% endif %}
+                
+                <div class="filter-group">
+                    <label>Вид ТО:</label>
+                    <select name="to_type">
+                        <option value="">Все</option>
+                        {% for type in to_types %}
+                            <option value="{{ type.id }}" {% if current_filters.to_type == type.id|stringformat:"s" %}selected{% endif %}>{{ type.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Зав. № машины:</label>
+                    <select name="to_machine">
+                        <option value="">Все</option>
+                        {% for num in machines_for_filter %}
+                            <option value="{{ num }}" {% if current_filters.to_machine == num %}selected{% endif %}>{{ num }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Сервисная компания:</label>
+                    <select name="to_service">
+                        <option value="">Все</option>
+                        {% for service in service_users %}
+                            <option value="{{ service.id }}" {% if current_filters.to_service == service.id|stringformat:"s" %}selected{% endif %}>{{ service.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" class="btn">Применить</button>
+                    <a href="?tab=to" class="btn btn-outline">Сбросить</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Вид ТО</th>
+                        <th>Дата проведения</th>
+                        <th>Наработка, м/час</th>
+                        <th>№ заказ-наряда</th>
+                        <th>Дата заказ-наряда</th>
+                        <th>Организация</th>
+                        <th>Машина</th>
+                        <th>Сервисная компания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for to in maintenances %}
+                    <tr onclick="window.location='{% url 'maintenance_detail' to.pk %}';" style="cursor: pointer;">
+                        <td>{{ to.maintenance_type.name }}</td>
+                        <td>{{ to.maintenance_date|date:"d.m.Y" }}</td>
+                        <td>{{ to.operating_hours }}</td>
+                        <td>{{ to.work_order_number }}</td>
+                        <td>{{ to.work_order_date|date:"d.m.Y" }}</td>
+                        <td>{{ to.organization.name }}</td>
+                        <td>{{ to.machine.serial_number }}</td>
+                        <td>{{ to.service_company.username }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center">Записи ТО не найдены.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if current_tab == 'claims' %}
+        <div class="filters-panel">
+            <form method="GET" action="">
+                <input type="hidden" name="tab" value="claims">
+                {% if current_filters.sort %}<input type="hidden" name="sort" value="{{ current_filters.sort }}">{% endif %}
+                
+                <div class="filter-group">
+                    <label>Узел отказа:</label>
+                    <select name="claim_node">
+                        <option value="">Все</option>
+                        {% for node in claim_nodes %}
+                            <option value="{{ node.id }}" {% if current_filters.claim_node == node.id|stringformat:"s" %}selected{% endif %}>{{ node.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Способ восстановления:</label>
+                    <select name="claim_recovery">
+                        <option value="">Все</option>
+                        {% for method in recovery_methods %}
+                            <option value="{{ method.id }}" {% if current_filters.claim_recovery == method.id|stringformat:"s" %}selected{% endif %}>{{ method.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Сервисная компания:</label>
+                    <select name="claim_service">
+                        <option value="">Все</option>
+                        {% for service in service_users %}
+                            <option value="{{ service.id }}" {% if current_filters.claim_service == service.id|stringformat:"s" %}selected{% endif %}>{{ service.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" class="btn">Применить</button>
+                    <a href="?tab=claims" class="btn btn-outline">Сбросить</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата отказа</th>
+                        <th>Наработка, м/час</th>
+                        <th>Узел отказа</th>
+                        <th>Способ восстановления</th>
+                        <th>Дата восстановления</th>
+                        <th>Время простоя</th>
+                        <th>Машина</th>
+                        <th>Сервисная компания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for claim in claims %}
+                    <tr onclick="window.location='{% url 'claim_detail' claim.pk %}';" style="cursor: pointer;">
+                        <td>{{ claim.failure_date|date:"d.m.Y" }}</td>
+                        <td>{{ claim.operating_hours }}</td>
+                        <td>{{ claim.failure_node.name }}</td>
+                        <td>{{ claim.recovery_method.name }}</td>
+                        <td>{{ claim.recovery_date|date:"d.m.Y" }}</td>
+                        <td>{{ claim.downtime }} дн.</td>
+                        <td>{{ claim.machine.serial_number }}</td>
+                        <td>{{ claim.service_company.username }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center">Рекламации не найдены.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

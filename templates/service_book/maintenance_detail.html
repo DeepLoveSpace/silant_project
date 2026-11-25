@@ -1,0 +1,67 @@
+{% extends 'service_book/base.html' %}
+
+{% block content %}
+
+<div class="detail-page">
+    <h1>Детальная информация о ТО</h1>
+
+    <div class="detail-actions">
+        <a href="{% url 'dashboard' %}" class="back-link">&larr; Назад к списку</a>
+
+        {% if is_manager or is_service %}
+            <a href="{% url 'maintenance_edit' maintenance.pk %}" class="btn">Редактировать</a>
+        {% endif %}
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <th style="width: 30%;">Вид ТО</th>
+                <td>
+                    {{ maintenance.maintenance_type.name }}
+                    {% if maintenance.maintenance_type.description %}
+                        <br><small style="color: gray;">Описание: {{ maintenance.maintenance_type.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Дата проведения ТО</th>
+                <td>{{ maintenance.maintenance_date|date:"d.m.Y" }}</td>
+            </tr>
+            <tr>
+                <th>Наработка, м/час</th>
+                <td>{{ maintenance.operating_hours }}</td>
+            </tr>
+            <tr>
+                <th>№ заказ-наряда</th>
+                <td>{{ maintenance.work_order_number }}</td>
+            </tr>
+            <tr>
+                <th>Дата заказ-наряда</th>
+                <td>{{ maintenance.work_order_date|date:"d.m.Y" }}</td>
+            </tr>
+            <tr>
+                <th>Организация, проводившая ТО</th>
+                <td>
+                    {{ maintenance.organization.name }}
+                    {% if maintenance.organization.description %}
+                        <br><small style="color: gray;">Описание: {{ maintenance.organization.description }}</small>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Машина</th>
+                <td>
+                    <a href="{% url 'machine_detail' maintenance.machine.pk %}">
+                        {{ maintenance.machine.serial_number }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <th>Сервисная компания</th>
+                <td>{{ maintenance.service_company.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

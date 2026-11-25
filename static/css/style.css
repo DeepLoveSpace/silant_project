@@ -1,0 +1,27 @@
+@import url('modules/variables.css');
+@import url('modules/base.css');
+@import url('modules/header.css');
+@import url('modules/footer.css');
+@import url('modules/tables.css');
+@import url('modules/forms.css');
+@import url('modules/login.css');
+@import url('modules/logout.css');
+@import url('modules/slider.css');
+@import url('modules/chat.css');
+@import url('modules/dashboard.css');
+@import url('modules/breadcrumbs.css');
+@import url('modules/buttons.css');
+@import url('modules/logo_animation.css');
+
+@font-face {
+    font-family: 'PT Astra Sans';
+    src: url('../fonts/PTAstraSans-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PT Astra Sans';
+    src: url('../fonts/PTAstraSans-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}

@@ -1,0 +1,40 @@
+.logo-animation-container {
+    position: fixed;
+    top: 120px;
+    left: 0;
+    width: 100vw;
+    height: 80px;
+    pointer-events: none;
+    z-index: 500;
+}
+
+.flying-logo {
+    position: absolute;
+    top: 50%;
+    left: 100vw;
+    transform: translateY(-50%) rotate(0deg);
+    width: 200px;
+    height: auto;
+    transition: left 2s ease-in-out, transform 5s linear;
+    will-change: transform, left;
+    filter: 
+        drop-shadow(0 0 1px #fff) 
+        drop-shadow(0 0 1px #fff) 
+        drop-shadow(0 0 1px #fff) 
+        drop-shadow(0 0 1px #fff);
+    opacity: 0.95;
+}
+
+.logo-animation-container.active .flying-logo {
+    left: calc(50vw - 100px);
+}
+
+.logo-animation-container.active .flying-logo.spinning {
+    transform: translateY(-50%) rotate(1800deg);
+}
+
+.logo-animation-container.finished .flying-logo {
+    left: -300px;
+    transform: translateY(-50%) rotate(1800deg);
+    transition: left 2s ease-in, transform 0s;
+}

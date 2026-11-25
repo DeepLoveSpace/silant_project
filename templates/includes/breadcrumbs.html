@@ -1,0 +1,14 @@
+{% if user.is_authenticated %}
+<nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a href="{% url 'index' %}" class="breadcrumb-item">Главная</a>
+    <span class="breadcrumb-separator">›</span>
+    
+    {% if current_page %}
+        <a href="{% url 'dashboard' %}" class="breadcrumb-item">Личный кабинет</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-item active">{{ current_page }}</span>
+    {% else %}
+        <span class="breadcrumb-item active">Личный кабинет</span>
+    {% endif %}
+</nav>
+{% endif %}

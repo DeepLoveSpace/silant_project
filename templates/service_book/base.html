@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Электронная сервисная книжка "Мой Силант"</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="{% url 'index' %}" class="logo-link">
+                    <img src="{% static 'img/logo_red2.png' %}" alt="Логотип Силант" class="logo">
+                </a>
+                <a href="{% url 'index' %}" class="title-link">
+                    <span class="header-title">Электронная сервисная книжка "Мой Силант"</span>
+                </a>
+            </div>
+            <div class="header-info">
+                <div class="header-contacts">
+                    <a href="tel:+78352201209" class="clickable-contact">+7-8352-20-12-09</a>,
+                    <a href="https://t.me/telegram" target="_blank" class="clickable-contact">Telegram</a>
+                </div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="nav-link-dashboard">Личный кабинет</a>
+                    <span class="user-info">Вы: <b>{{ user.username }}</b></span>
+                    <form method="post" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline">Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'account_login' %}" class="btn">Авторизация</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-contacts">
+                <a href="tel:+78352201209" class="clickable-contact">+7-8352-20-12-09</a>,
+                <a href="https://t.me/telegram" target="_blank" class="clickable-contact">Telegram</a>
+            </div>
+            <span>Мой Силант 2026</span>
+        </div>
+    </footer>
+
+    {% include 'includes/chat_widget.html' %}
+
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script src="{% static 'js/logo_animation.js' %}"></script>
+
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
